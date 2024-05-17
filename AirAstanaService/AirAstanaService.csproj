@@ -5,10 +5,13 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
@@ -30,9 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Application\Commands\" />
-      <Folder Include="Application\Handlers\" />
-      <Folder Include="Application\Queries\" />
       <Folder Include="Domain\Interfaces\" />
       <Folder Include="Infrastructure\Caching\" />
       <Folder Include="Infrastructure\Logging\" />
@@ -40,6 +40,13 @@
       <Folder Include="Presentation\Middlewares\" />
       <Folder Include="Presentation\Validation\" />
       <Folder Include="Tests\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\AirAstanaService.IntegrationTests.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\Debug\net8.0\AirAstanaService.IntegrationTests.sourcelink.json" />
+      <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\Debug\net8.0\MvcTestingAppManifest.json" />
+      <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\project.assets.json" />
     </ItemGroup>
 
 </Project>

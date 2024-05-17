@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using AirAstanaService.Application.Interfaces;
 using AirAstanaService.Application.Services;
@@ -48,7 +49,7 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
-
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddStackExchangeRedisCache(options =>
@@ -58,9 +59,12 @@ builder.Services.AddStackExchangeRedisCache(options =>
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<FlightValidator>());
 
+var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Flight Status API", Version = "v1" });
+    c.IncludeXmlComments(xmlPath); // Подключение XML-документации
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -81,6 +85,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
 
 
 var app = builder.Build();

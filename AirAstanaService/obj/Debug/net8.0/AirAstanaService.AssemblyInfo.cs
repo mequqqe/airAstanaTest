@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AirAstanaService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+01dd5c9e21cdf7558b7a88f84526dc6fd08bbb75")]
 [assembly: System.Reflection.AssemblyProductAttribute("AirAstanaService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AirAstanaService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
