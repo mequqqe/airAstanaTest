@@ -59,7 +59,7 @@ namespace AirAstanaService.Tests
             var command = new AddFlightCommand { Flight = flightDto };
             _mediatorMock.Setup(m => m.Send(It.IsAny<AddFlightCommand>(), default)).ReturnsAsync(flightDto);
             
-            var result = await _controller.PostFlight(command);
+            var result = await _controller.PostFlight(flightDto);
             
             var createdAtActionResult = result.Result as CreatedAtActionResult;
             Assert.IsNotNull(createdAtActionResult);

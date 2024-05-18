@@ -18,27 +18,19 @@ public class FlightRepository : IFlightRepository
 
     public async Task<IEnumerable<Flight>> GetFlightsAsync(string origin, string destination)
     {
-        try
+        var query = _context.Flights.AsQueryable();
+
+        if (!string.IsNullOrEmpty(origin))
         {
-            var query = _context.Flights.AsQueryable();
-
-            if (!string.IsNullOrEmpty(origin))
-            {
-                query = query.Where(f => f.Origin == origin);
-            }
-
-            if (!string.IsNullOrEmpty(destination))
-            {
-                query = query.Where(f => f.Destination == destination);
-            }
-
-            return await query.ToListAsync();
+            query = query.Where(f => f.Origin == origin);
         }
-        catch (Exception ex)
+
+        if (!string.IsNullOrEmpty(destination))
         {
-            _logger.LogError(ex, "Произошла ошибка при получении рейсов с отправлением из: {Origin} и прибытием в: {Destination}", origin, destination);
-            throw;
+            query = query.Where(f => f.Destination == destination);
         }
+
+        return await query.ToListAsync();
     }
 
     public async Task<Flight> GetFlightByIdAsync(int id)

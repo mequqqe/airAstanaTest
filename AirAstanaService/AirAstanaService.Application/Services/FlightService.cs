@@ -63,14 +63,14 @@ public class FlightService : IFlightService
 
     public async Task<IEnumerable<FlightDTO>> GetFlightsAsync(string origin, string destination)
     {
-        var cacheData = await _cache.GetStringAsync(CacheKey);
-        if (!string.IsNullOrEmpty(cacheData))
+        string cacheKey = $"{CacheKey}_{origin}_{destination}";
+        var cachedFlights = await _cache.GetStringAsync(cacheKey);
+        if (!string.IsNullOrEmpty(cachedFlights))
         {
-            _logger.LogInformation("Fetching flights from cache.");
-            return JsonConvert.DeserializeObject<IEnumerable<FlightDTO>>(cacheData);
+            _logger.LogInformation("Получено из кэша: {CacheKey}", cacheKey);
+            return JsonConvert.DeserializeObject<IEnumerable<FlightDTO>>(cachedFlights);
         }
 
-        _logger.LogInformation("Fetching flights from database.");
         var flights = await _flightRepository.GetFlightsAsync(origin, destination);
         var flightDtos = flights.Select(f => new FlightDTO
         {
@@ -80,15 +80,19 @@ public class FlightService : IFlightService
             Departure = f.Departure,
             Arrival = f.Arrival,
             Status = f.Status.ToString()
-        });
+        }).ToList();
 
-        await _cache.SetStringAsync(CacheKey, JsonConvert.SerializeObject(flightDtos), new DistributedCacheEntryOptions
+        var cacheOptions = new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-        });
+        };
+
+        await _cache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(flightDtos), cacheOptions);
+        _logger.LogInformation("Добавлено в кэш: {CacheKey}", cacheKey);
 
         return flightDtos;
     }
+
 
     private async Task UpdateCache()
     {
