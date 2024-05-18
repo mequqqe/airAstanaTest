@@ -31,7 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Application\" />
         <Folder Include="Tests\" />
     </ItemGroup>
 
@@ -62,7 +61,6 @@
       <Content Include="AirAstanaService.Application\AirAstanaService.Application.csproj" />
       <Content Include="AirAstanaService.Domain\AirAstanaService.Domain.csproj" />
       <Content Include="AirAstanaService.Infrastructure\AirAstanaService.Infrastructure.csproj" />
-      <Content Include="AirAstanaService.Presentation\AirAstanaService.Presentation.csproj" />
     </ItemGroup>
 
     <ItemGroup>

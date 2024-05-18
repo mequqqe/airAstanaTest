@@ -1,10 +1,12 @@
 using System.Reflection;
 using System.Text;
+using AirAstanaService.AirAstanaService.Infrastructure.Logs;
 using AirAstanaService.Application.Interfaces;
 using AirAstanaService.Application.Services;
 using AirAstanaService.Application.Validators;
 using AirAstanaService.Infrastructure;
 using AirAstanaService.Infrastructure.Repositories;
+using AirAstanaService.Presentation.Middlewares;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "AirAstanaService")
     .WriteTo.Console()
     .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
@@ -31,6 +35,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFlightRepository, FlightRepository>();
 builder.Services.AddScoped<IFlightService, FlightService>();
+builder.Services.AddSingleton<ILoggerService, LoggerService>();
 
 builder.Services.AddAuthentication(options =>
     {
@@ -104,6 +109,8 @@ app.UseRouting();
 app.UseAuthentication(); 
 
 app.UseAuthorization();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();
 
