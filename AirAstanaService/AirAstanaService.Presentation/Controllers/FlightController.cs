@@ -55,17 +55,18 @@ public class FlightController : ControllerBase
     /// <returns>Созданный рейс</returns>
     [HttpPost]
     [Authorize(Roles = "Moderator")]
-    public async Task<ActionResult<FlightDTO>> PostFlight([FromBody] AddFlightCommand command)
+    public async Task<ActionResult<FlightDTO>> PostFlight([FromBody] FlightDTO flightDto)
     {
         try
         {
+            var command = new AddFlightCommand { Flight = flightDto };
             var flight = await _mediator.Send(command);
             _logger.LogInformation("Добавлен новый рейс: {@Flight}", flight);
             return CreatedAtAction(nameof(GetFlights), new { id = flight.ID }, flight);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Ошибка при добавлении нового рейса: {@Command}", command);
+            _logger.LogError(ex, "Ошибка при добавлении нового рейса: {@Command}", flightDto);
             return StatusCode(500, "Внутренняя ошибка сервера");
         }
     }
