@@ -31,11 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Infrastructure\Caching\" />
-        <Folder Include="Infrastructure\Logging\" />
-        <Folder Include="Infrastructure\Services\" />
-        <Folder Include="Presentation\Middlewares\" />
-        <Folder Include="Presentation\Validation\" />
+        <Folder Include="Application\" />
         <Folder Include="Tests\" />
     </ItemGroup>
 
@@ -44,6 +40,36 @@
         <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\Debug\net8.0\AirAstanaService.IntegrationTests.sourcelink.json" />
         <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\Debug\net8.0\MvcTestingAppManifest.json" />
         <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\project.assets.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Application\Validators\**" />
+      <Compile Remove="Infrastructure\logs\**" />
+      <Compile Remove="Infrastructure\Repositories\**" />
+      <Compile Remove="Presentation\Program.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Application\Validators\**" />
+      <EmbeddedResource Remove="Infrastructure\logs\**" />
+      <EmbeddedResource Remove="Infrastructure\Repositories\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Application\Validators\**" />
+      <Content Remove="Infrastructure\logs\**" />
+      <Content Remove="Infrastructure\Repositories\**" />
+      <Content Include="AirAstanaService.Application\AirAstanaService.Application.csproj" />
+      <Content Include="AirAstanaService.Domain\AirAstanaService.Domain.csproj" />
+      <Content Include="AirAstanaService.Infrastructure\AirAstanaService.Infrastructure.csproj" />
+      <Content Include="AirAstanaService.Presentation\AirAstanaService.Presentation.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Application\Validators\**" />
+      <None Remove="Infrastructure\logs\**" />
+      <None Remove="Infrastructure\Repositories\**" />
+      <None Remove="Presentation\AirAstanaService.http" />
     </ItemGroup>
 
 </Project>
