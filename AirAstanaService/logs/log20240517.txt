@@ -85,3 +85,5 @@ StackExchange.Redis.RedisConnectionException: The message timed out in the backl
 2024-05-17 08:45:12.156 +05:00 [INF] Flights found in cache.
 hing flights from cache.
 2024-05-17 08:45:12.156 +05:00 [INF] Flights found in cache.
+2024-05-17 14:48:53.412 +05:00 [WRN] Failed to determine the https port for redirect.
+2024-05-17 14:49:33.785 +05:00 [INF] Fetching flights with origin: NRT and destination2024-02024-05-17 14:49:50.033 +05:00 [INF] Added new flight: {"ID":7,"Origin":"AAS","Destina2024-05-17 14:49:50.033 +05:00 [INF] Added new flight: {"ID":7,"Origin":"AAS","Destination":"AAK","Departure":"2024-05-17T09:49:39.6880000+00:2024-05-17 14:50:59.069 +05:00 [INF] Fetching flights with origin: AAS and destination2024-05-17 14:50:59.069 +05:00 [INF] Fetching flights with origin: AAS and destination: AAK
