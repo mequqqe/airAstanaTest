@@ -1,12 +1,12 @@
 using AirAstanaService.Domain.Entities;
+using AirAstanaService.Application.DTOs;
 
 namespace AirAstanaService.Application.Interfaces;
 
 public interface IFlightService
 {
-    Task<IEnumerable<Flight>> GetFlightsAsync(string origin, string destination);
-    Task<Flight> GetFlightByIdAsync(int id);
-    Task AddFlightAsync(Flight flight);
-    Task UpdateFlightAsync(Flight flight);
+    Task<FlightDTO> AddFlightAsync(FlightDTO flightDto);
+    Task UpdateFlightAsync(FlightDTO flightDto);
     Task DeleteFlightAsync(int id);
+    Task<IEnumerable<FlightDTO>> GetFlightsAsync(string origin, string destination);
 }

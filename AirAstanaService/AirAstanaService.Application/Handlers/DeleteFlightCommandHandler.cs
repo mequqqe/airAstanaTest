@@ -6,16 +6,16 @@ namespace AirAstanaService.Application.Handlers;
 
 public class DeleteFlightCommandHandler : IRequestHandler<DeleteFlightCommand, Unit>
 {
-    private readonly IFlightRepository _flightRepository;
+    private readonly IFlightService _flightService;
 
-    public DeleteFlightCommandHandler(IFlightRepository flightRepository)
+    public DeleteFlightCommandHandler(IFlightService flightService)
     {
-        _flightRepository = flightRepository;
+        _flightService = flightService;
     }
 
     public async Task<Unit> Handle(DeleteFlightCommand request, CancellationToken cancellationToken)
     {
-        await _flightRepository.DeleteFlightAsync(request.Id);
+        await _flightService.DeleteFlightAsync(request.Id);
         return Unit.Value;
     }
 }

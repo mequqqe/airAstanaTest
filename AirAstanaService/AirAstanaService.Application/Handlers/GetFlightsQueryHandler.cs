@@ -1,3 +1,4 @@
+using AirAstanaService.Application.DTOs;
 using AirAstanaService.Application.Interfaces;
 using AirAstanaService.Application.Queries;
 using AirAstanaService.Domain.Entities;
@@ -5,17 +6,17 @@ using MediatR;
 
 namespace AirAstanaService.Application.Handlers;
 
-public class GetFlightsQueryHandler : IRequestHandler<GetFlightsQuery, IEnumerable<Flight>>
+public class GetFlightsQueryHandler : IRequestHandler<GetFlightsQuery, IEnumerable<FlightDTO>>
 {
-    private readonly IFlightRepository _flightRepository;
+    private readonly IFlightService _flightService;
 
-    public GetFlightsQueryHandler(IFlightRepository flightRepository)
+    public GetFlightsQueryHandler(IFlightService flightService)
     {
-        _flightRepository = flightRepository;
+        _flightService = flightService;
     }
 
-    public async Task<IEnumerable<Flight>> Handle(GetFlightsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<FlightDTO>> Handle(GetFlightsQuery request, CancellationToken cancellationToken)
     {
-        return await _flightRepository.GetFlightsAsync(request.Origin, request.Destination);
+        return await _flightService.GetFlightsAsync(request.Origin, request.Destination);
     }
 }

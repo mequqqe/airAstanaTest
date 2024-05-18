@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AirAstanaService.Application.Commands;
 using AirAstanaService.Application.Queries;
-using AirAstanaService.Domain.Entities;
+using AirAstanaService.Application.DTOs;
 using AirAstanaService.Presentation.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,9 +30,9 @@ namespace AirAstanaService.Tests
         [Test]
         public async Task GetFlights_ShouldReturnOkResult_WithListOfFlights()
         {
-            var flights = new List<Flight>
+            var flights = new List<FlightDTO>
             {
-                new Flight { ID = 1, Origin = "Origin1", Destination = "Destination1" }
+                new FlightDTO { ID = 1, Origin = "Origin1", Destination = "Destination1" }
             };
             _mediatorMock.Setup(m => m.Send(It.IsAny<GetFlightsQuery>(), default)).ReturnsAsync(flights);
 
@@ -39,7 +40,7 @@ namespace AirAstanaService.Tests
 
             var okResult = result.Result as OkObjectResult;
             Assert.IsNotNull(okResult);
-            var returnValue = okResult.Value as List<Flight>;
+            var returnValue = okResult.Value as List<FlightDTO>;
             Assert.IsNotNull(returnValue);
             Assert.AreEqual(1, returnValue.Count);
         }
@@ -47,26 +48,41 @@ namespace AirAstanaService.Tests
         [Test]
         public async Task PostFlight_ShouldReturnCreatedAtActionResult()
         {
-            var command = new AddFlightCommand { Origin = "Origin1", Destination = "Destination1" };
-            var flight = new Flight { ID = 1, Origin = "Origin1", Destination = "Destination1" };
-            _mediatorMock.Setup(m => m.Send(It.IsAny<AddFlightCommand>(), default)).ReturnsAsync(flight);
+            var flightDto = new FlightDTO 
+            { 
+                Origin = "Origin1", 
+                Destination = "Destination1",
+                Departure = DateTimeOffset.Now,
+                Arrival = DateTimeOffset.Now.AddHours(2),
+                Status = "OnTime"
+            };
+            var command = new AddFlightCommand { Flight = flightDto };
+            _mediatorMock.Setup(m => m.Send(It.IsAny<AddFlightCommand>(), default)).ReturnsAsync(flightDto);
             
             var result = await _controller.PostFlight(command);
             
             var createdAtActionResult = result.Result as CreatedAtActionResult;
             Assert.IsNotNull(createdAtActionResult);
-            var returnValue = createdAtActionResult.Value as Flight;
+            var returnValue = createdAtActionResult.Value as FlightDTO;
             Assert.IsNotNull(returnValue);
-            Assert.AreEqual(flight.ID, returnValue.ID);
+            Assert.AreEqual(flightDto.ID, returnValue.ID);
         }
 
         [Test]
         public async Task PutFlight_ShouldReturnNoContentResult()
         {
-            var flight = new Flight { ID = 1, Origin = "Origin1", Destination = "Destination1" };
+            var flightDto = new FlightDTO 
+            { 
+                ID = 1, 
+                Origin = "Origin1", 
+                Destination = "Destination1",
+                Departure = DateTimeOffset.Now,
+                Arrival = DateTimeOffset.Now.AddHours(2),
+                Status = "OnTime"
+            };
             _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateFlightCommand>(), default)).ReturnsAsync(Unit.Value);
             
-            var result = await _controller.PutFlight(1, flight);
+            var result = await _controller.PutFlight(1, flightDto);
 
             Assert.IsInstanceOf<NoContentResult>(result);
         }

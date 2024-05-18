@@ -31,10 +31,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Tests\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\AirAstanaService.IntegrationTests.csproj.nuget.dgspec.json" />
         <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\Debug\net8.0\AirAstanaService.IntegrationTests.sourcelink.json" />
         <_ContentIncludedByDefault Remove="AirAstanaService.IntegrationTests\obj\Debug\net8.0\MvcTestingAppManifest.json" />

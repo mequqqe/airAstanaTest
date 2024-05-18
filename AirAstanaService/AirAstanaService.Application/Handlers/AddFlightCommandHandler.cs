@@ -1,31 +1,22 @@
 using AirAstanaService.Application.Commands;
+using AirAstanaService.Application.DTOs;
 using AirAstanaService.Application.Interfaces;
 using AirAstanaService.Domain.Entities;
 using MediatR;
 
 namespace AirAstanaService.Application.Handlers;
 
-public class AddFlightCommandHandler : IRequestHandler<AddFlightCommand, Flight>
+public class AddFlightCommandHandler : IRequestHandler<AddFlightCommand, FlightDTO>
 {
-    private readonly IFlightRepository _flightRepository;
+    private readonly IFlightService _flightService;
 
-    public AddFlightCommandHandler(IFlightRepository flightRepository)
+    public AddFlightCommandHandler(IFlightService flightService)
     {
-        _flightRepository = flightRepository;
+        _flightService = flightService;
     }
 
-    public async Task<Flight> Handle(AddFlightCommand request, CancellationToken cancellationToken)
+    public async Task<FlightDTO> Handle(AddFlightCommand request, CancellationToken cancellationToken)
     {
-        var flight = new Flight
-        {
-            Origin = request.Origin,
-            Destination = request.Destination,
-            Departure = request.Departure,
-            Arrival = request.Arrival,
-            Status = request.Status
-        };
-
-        await _flightRepository.AddFlightAsync(flight);
-        return flight;
+        return await _flightService.AddFlightAsync(request.Flight);
     }
 }

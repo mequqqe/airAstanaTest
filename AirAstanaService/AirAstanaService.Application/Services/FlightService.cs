@@ -1,3 +1,4 @@
+using AirAstanaService.Application.DTOs;
 using AirAstanaService.Application.Interfaces;
 using AirAstanaService.Domain.Entities;
 using Microsoft.Extensions.Caching.Distributed;
@@ -19,65 +20,56 @@ public class FlightService : IFlightService
             _logger = logger;
         }
 
-        public async Task<IEnumerable<Flight>> GetFlightsAsync(string origin, string destination)
+        public async Task<FlightDTO> AddFlightAsync(FlightDTO flightDto)
         {
-            _logger.LogInformation("Fetching flights from cache.");
-            var cachedFlights = await _cache.GetStringAsync(CacheKey);
-
-            if (!string.IsNullOrEmpty(cachedFlights))
+            var flight = new Flight
             {
-                _logger.LogInformation("Flights found in cache.");
-                var flights = JsonConvert.DeserializeObject<IEnumerable<Flight>>(cachedFlights);
-                if (!string.IsNullOrEmpty(origin) || !string.IsNullOrEmpty(destination))
-                {
-                    flights = flights.Where(f =>
-                        (string.IsNullOrEmpty(origin) || f.Origin == origin) &&
-                        (string.IsNullOrEmpty(destination) || f.Destination == destination));
-                }
-                return flights;
-            }
+                Origin = flightDto.Origin,
+                Destination = flightDto.Destination,
+                Departure = flightDto.Departure,
+                Arrival = flightDto.Arrival,
+                Status = Enum.Parse<FlightStatus>(flightDto.Status)
+            };
 
-            _logger.LogInformation("Flights not found in cache. Fetching from database.");
-            var flightList = await _flightRepository.GetFlightsAsync(origin, destination);
-            var serializedFlights = JsonConvert.SerializeObject(flightList);
-            await _cache.SetStringAsync(CacheKey, serializedFlights);
-
-            return flightList;
-        }
-
-        public async Task<Flight> GetFlightByIdAsync(int id)
-        {
-            _logger.LogInformation("Fetching flight by ID from cache.");
-            var flights = await GetFlightsAsync(null, null);
-            return flights?.FirstOrDefault(f => f.ID == id);
-        }
-
-        public async Task AddFlightAsync(Flight flight)
-        {
-            _logger.LogInformation("Adding flight to database.");
             await _flightRepository.AddFlightAsync(flight);
-            await UpdateCache();
+
+            flightDto.ID = flight.ID;
+            return flightDto;
         }
 
-        public async Task UpdateFlightAsync(Flight flight)
+        public async Task UpdateFlightAsync(FlightDTO flightDto)
         {
-            _logger.LogInformation("Updating flight in database.");
+            var flight = new Flight
+            {
+                ID = flightDto.ID,
+                Origin = flightDto.Origin,
+                Destination = flightDto.Destination,
+                Departure = flightDto.Departure,
+                Arrival = flightDto.Arrival,
+                Status = Enum.Parse<FlightStatus>(flightDto.Status)
+            };
+
             await _flightRepository.UpdateFlightAsync(flight);
-            await UpdateCache();
         }
 
         public async Task DeleteFlightAsync(int id)
         {
-            _logger.LogInformation("Deleting flight from database.");
             await _flightRepository.DeleteFlightAsync(id);
-            await UpdateCache();
         }
 
-        private async Task UpdateCache()
+        public async Task<IEnumerable<FlightDTO>> GetFlightsAsync(string origin, string destination)
         {
-            _logger.LogInformation("Updating cache.");
-            var flights = await _flightRepository.GetFlightsAsync(null, null);
-            var serializedFlights = JsonConvert.SerializeObject(flights);
-            await _cache.SetStringAsync(CacheKey, serializedFlights);
+            var flights = await _flightRepository.GetFlightsAsync(origin, destination);
+
+            return flights.Select(f => new FlightDTO
+            {
+                ID = f.ID,
+                Origin = f.Origin,
+                Destination = f.Destination,
+                Departure = f.Departure,
+                Arrival = f.Arrival,
+                Status = f.Status.ToString()
+            });
         }
+
     }

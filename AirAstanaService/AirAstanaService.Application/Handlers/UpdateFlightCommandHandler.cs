@@ -6,16 +6,16 @@ namespace AirAstanaService.Application.Handlers;
 
 public class UpdateFlightCommandHandler : IRequestHandler<UpdateFlightCommand, Unit>
 {
-    private readonly IFlightRepository _flightRepository;
+    private readonly IFlightService _flightService;
 
-    public UpdateFlightCommandHandler(IFlightRepository flightRepository)
+    public UpdateFlightCommandHandler(IFlightService flightService)
     {
-        _flightRepository = flightRepository;
+        _flightService = flightService;
     }
 
     public async Task<Unit> Handle(UpdateFlightCommand request, CancellationToken cancellationToken)
     {
-        await _flightRepository.UpdateFlightAsync(request.Flight);
+        await _flightService.UpdateFlightAsync(request.Flight);
         return Unit.Value;
     }
 }

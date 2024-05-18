@@ -1,6 +1,6 @@
 using AirAstanaService.Application.Commands;
+using AirAstanaService.Application.DTOs;
 using AirAstanaService.Application.Queries;
-using AirAstanaService.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,19 +31,19 @@ public class FlightController : ControllerBase
     /// <returns>Список рейсов</returns>
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<Flight>>> GetFlights([FromQuery] string origin,
+    public async Task<ActionResult<IEnumerable<FlightDTO>>> GetFlights([FromQuery] string origin,
         [FromQuery] string destination)
     {
         try
         {
-            _logger.LogInformation("Fetching flights with origin: {Origin} and destination: {Destination}", origin, destination);
+            _logger.LogInformation("Запрос рейсов с отправлением из: {Origin} и прибытием в: {Destination}", origin, destination);
             var query = new GetFlightsQuery { Origin = origin, Destination = destination };
             var flights = await _mediator.Send(query);
             return Ok(flights);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Ошибкапри получении рейсов с отправлением из: {Origin} и прибытием в: {Destination}", origin, destination);
+            _logger.LogError(ex, "Ошибка при получении рейсов с отправлением из: {Origin} и прибытием в: {Destination}", origin, destination);
             return StatusCode(500, "Внутренняя ошибка сервера");
         }
     }
@@ -51,11 +51,11 @@ public class FlightController : ControllerBase
     /// <summary>
     /// Добавить новый рейс
     /// </summary>
-    /// <param name="flight">Данные рейса</param>
+    /// <param name="command">Данные рейса</param>
     /// <returns>Созданный рейс</returns>
     [HttpPost]
     [Authorize(Roles = "Moderator")]
-    public async Task<ActionResult<Flight>> PostFlight([FromBody] AddFlightCommand command)
+    public async Task<ActionResult<FlightDTO>> PostFlight([FromBody] AddFlightCommand command)
     {
         try
         {
@@ -77,7 +77,7 @@ public class FlightController : ControllerBase
     /// <param name="flight">Обновленные данные рейса</param>
     [HttpPut("{id}")]
     [Authorize(Roles = "Moderator")]
-    public async Task<IActionResult> PutFlight(int id, [FromBody] Flight flight)
+    public async Task<IActionResult> PutFlight(int id, [FromBody] FlightDTO flight)
     {
         if (id != flight.ID)
         {
@@ -118,3 +118,4 @@ public class FlightController : ControllerBase
         }
     }
 }
+
